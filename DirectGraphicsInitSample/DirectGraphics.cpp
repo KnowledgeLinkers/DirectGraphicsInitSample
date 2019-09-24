@@ -1,8 +1,10 @@
 #include "DirectGraphics.h"
 #include <d3d9.h>
 #include <d3dx9.h>
-// https://www.microsoft.com/en-us/download/details.aspx?id=6812
-//https://yttm-work.jp/directx/directx_0004.html
+/*
+https://www.microsoft.com/en-us/download/details.aspx?id=6812
+*/
+
 // 静的ライブラリ
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
@@ -80,38 +82,9 @@ bool DrawStart()
 	// １．シーンクリア
 	g_pD3DDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 0.0f, 0);
 
-	//データ構築
-	LPDIRECT3DVERTEXBUFFER9 pVBuffer = nullptr;
-	// 頂点データ作成　
-	struct Vertex
-	{
-		FLOAT x, y, z;
-		D3DCOLOR color;
-	};
-
-	Vertex VertexData[3] = {
-	  { 0.0f,  0.5f, 0.0f, D3DCOLOR_ARGB(255, 0,0,255) },
-	  { 0.5f, -0.5f, 0.0f,  D3DCOLOR_ARGB(255,0,255,0) },
-	  { -0.5f, -0.5f, 0.0f, D3DCOLOR_ARGB(255, 255,0,0) },
-	};
-	g_pD3DDevice->CreateVertexBuffer(sizeof(VertexData), 0,
-		D3DFVF_XYZ | D3DFVF_DIFFUSE, D3DPOOL_DEFAULT, &pVBuffer, NULL);
-
-	void* vb;
-	if (SUCCEEDED(pVBuffer->Lock(0, sizeof(VertexData), &vb, 0))) {
-		memcpy(vb, &VertexData, sizeof(VertexData));
-		pVBuffer->Unlock();
-	}
-
 	// ２．シーン描画開始
 	if (D3D_OK == g_pD3DDevice->BeginScene())
 	{
-		g_pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-
-		g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-		g_pD3DDevice->SetStreamSource(0, pVBuffer, 0, sizeof(Vertex));
-		g_pD3DDevice->SetFVF(D3DFVF_XYZ | D3DFVF_DIFFUSE);
-		g_pD3DDevice->DrawPrimitive(D3DPT_TRIANGLELIST, 0, 1);
 		return true;
 	}
 
